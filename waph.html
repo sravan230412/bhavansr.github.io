@@ -64,7 +64,22 @@
 	<img src="images/my.JPG" alt="" width="150">
 </div>
 <div id="email" onclick="showhideEmail()">Show my email</div>
-				<script src="email.js"></script>
+				<script >
+					var shown=false;
+function showhideEmail(){
+	if(shown){
+		document.getElementById("email").innerHTML ="Show my emial";
+		shown=false;
+	}
+	else{
+		var myemail="<a href='mailto:bhavansr"+"0"+"ucmail.uc.edu'>bhavansr"+
+		"@"+"ucmail.uc.edu</a>";
+		document.getElementById('email').innerHTML = myemail;
+		shown=true;
+	}
+}
+
+				</script>
 <div id="digit-clock"></div>
 		<script>
 		function displayTime(){
