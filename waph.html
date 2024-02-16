@@ -126,5 +126,29 @@ function showhideEmail(){
 							  setInterval(fetchjoke,60000)
 </script>
 </div>
+<div class="container">
+    <h1>Random Quote Generator</h1>
+    <div class="quote" id="quote">Loading...</div>
+    <button onclick="getRandomQuote()">Generate Random Quote</button>
+</div>
+
+<script>
+    function getRandomQuote() {
+        fetch('https://api.quotable.io/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('quote').textContent = '"' + data.content + '" - ' + data.author;
+            })
+            .catch(error => {
+                console.error('Error fetching random quote:', error);
+                document.getElementById('quote').textContent = 'Failed to fetch random quote';
+            });
+    }
+
+    // Generate a random quote on page load
+    getRandomQuote();
+</script>
+
+</div>
 </body>
 </html>
