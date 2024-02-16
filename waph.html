@@ -3,6 +3,55 @@
 <head>
 <meta charset="utf-8">
 <title>Web Application Programming and Hacking</title>
+<link rel="stylesheet" type="text/css" href="https://waph-uc.github.io/style1.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			margin: 0;
+			padding: 0;
+		}
+		#top {
+			background-color: #bababa;
+			color: #fff;
+			text-align: center;
+			padding: 20px;
+		}
+		#menubar {
+			background-color: #444;
+			color: #fff;
+			padding: 10px;
+		}
+		#Info {
+			background-color: #ccc;
+			padding: 10px;
+		}
+		#Info a {
+			color: #333;
+			text-decoration: none;
+		}
+		div {
+			padding: 20px;
+			background-color: #fff;
+			margin: 10px;
+		}
+		.button {
+			background-color: #4CAF50;
+			color: white;
+			font-size: 12px;
+			padding: 8px 16px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+		#response {
+			background-color: #ff9800;
+			padding: 10px;
+			margin-top: 20px;
+			text-align: center;
+		}
+	</style>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="top">
@@ -12,8 +61,34 @@
 </div>
 <div id="menubar">
 	<h3> Student: Sravan Kumar Bhavana</h3>
-	<img src="images/my.jpg">
+	<img src="images/my.JPG" alt="" width="150">
 </div>
+<div id="email" onclick="showhideEmail()">Show my email</div>
+				<script src="email.js"></script>
+<div id="digit-clock"></div>
+		<script>
+		function displayTime(){
+		document.getElementById('digit-clock').innerHTML="Current time: "+new Date();
+		}
+		setInterval(displayTime, 500);
+		</script>
+		<canvas id="analog-clock" width="150" height="150" style="background-color: #999"></canvas>
+		<script src="https://waph-uc.github.io/clock.js"></script>
+		<script>
+		var canvas = document.getElementById("analog-clock");
+		var ctx=canvas.getContext("2d");
+		var radius=canvas.height/2;
+		ctx.translate(radius,radius);
+		radius=radius*0.90;
+		setInterval(drawClock,1000);
+
+		function drawClock(){
+		drawFace(ctx, radius);
+		drawNumbers(ctx, radius);
+		drawTime(ctx, radius);
+		}
+		</script>
+		</div>
 <div id="Info">
 	<a href="https://www.w3schools.com/html/">A simple html page</a>
 </div>
@@ -23,6 +98,18 @@
 		<p>Lab 2: Front-end Development<br><br>In this lab, basics of html, ajax requests, php requests, jquery requests and usage, and integration of web API's such as generate random jokes and guess the age of user.</p><br>
 	<h3>Hackathons</h3>
 	<p>Hackathon 1: Cross-Site Scripting attacks and defences (XSS) <br><br>Hackathon explores different levels of XSS attacks of a web application. It also explores the defences such as input validation and defensive measures to exclude XSS risks.</p>
+</div>
+<div id="response">
+<script>
+	function fetchjoke(){
+						$.get("https://v2.jokeapi.dev/joke/Programming?type=single",
+							function(result){
+								console.log("From jokeAPI: " + JSON.stringify(result));
+								$("#response").html("A programming joke of the day: "+result.joke);
+							});}
+                              fetchjoke();
+							  setInterval(fetchjoke,60000)
+</script>
 </div>
 </body>
 </html>
