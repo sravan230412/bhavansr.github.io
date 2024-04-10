@@ -38,7 +38,6 @@ $stmt->bind_param("ssss", $username, $email, $name, $password);
 
 if ($stmt->execute()) {
     echo "New record created successfully";
-    header("Location: login.php");
 } else {
     echo "Error: " . $stmt->error;
 }

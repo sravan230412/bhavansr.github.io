@@ -1,5 +1,4 @@
 <?php
-session_set_cookie_params(15*60,"/","sravan230412.waph.io",TRUE,TRUE);
 session_start();
 
 // Check if user is logged in

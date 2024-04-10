@@ -1,5 +1,4 @@
 <?php
-session_set_cookie_params(15*60, "/", "sravan230412.waph.io", TRUE, TRUE);
 session_start();
 
 // Check if user is not logged in
@@ -111,6 +110,8 @@ function changePassword($username, $currentPassword, $newPassword) {
              onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Password does not match' : '');"><br>
 
       <button type="submit">Change Password</button>
+
+      <p> Click here to go back to <a href="new_login.php">Home page</a></p>
     </form>
   </div>
 
