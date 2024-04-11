@@ -1,42 +1,75 @@
 <?php
 session_start();
 
+
 // Check if user is logged in
 if (!isset($_SESSION['authenticated'])|| $_SESSION['authenticated'] !== TRUE) {
     header("Location: login.php");
     exit;
 }
 
-$mysqli = new mysqli('localhost', 'bhavansr', '12345', 'waph');
-if($mysqli->connect_errno){
-    printf("Database connection failed: %s\n", $mysqli->connect_error);
-    exit();
+$userProfile = getUserProfile($_SESSION['username']);
+
+// Update user details if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $_SESSION['authenticated'] = TRUE;
+    $newUsername = $_POST["username"];
+    $newEmail = $_POST["email"];
+
+    if (updateUserDetails($_SESSION['username'], $newUsername, $newEmail)) {
+        echo "<script>alert('User details updated successfully');</script>";
+        // Update session username if changed
+        $_SESSION['username'] = $newUsername;
+        // Refresh user profile after update
+        $userProfile = getUserProfile($_SESSION['username']);
+    } else {
+        echo "<script>alert('Failed to update user details');</script>";
+    }
 }
 
-$username= $_SESSION['username'];
-global $mysqli;
-// Fetch user data from the database
-$stmt = $mysqli->prepare("SELECT name, email FROM users WHERE username = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$stmt->bind_result($name, $email);
-$stmt->fetch();
-$stmt->close();
+function getUserProfile($username) {
+    $mysqli = new mysqli('localhost', 'bhavansr', '12345', 'waph');
+    if ($mysqli->connect_errno) {
+        printf("Database connection failed: %s\n", $mysqli->connect_error);
+        exit();
+    }
 
-// Handle form submission for profile update
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $newName = $_POST['name'];
-    $newEmail = $_POST['email'];
+    $sql = "SELECT * FROM users WHERE username=?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $userProfile = $result->fetch_assoc();
+    return $userProfile;
+}
+
+function updateUserDetails($username, $newUsername, $newEmail) {
+    $mysqli = new mysqli('localhost', 'bhavansr', '12345', 'waph');
+    if ($mysqli->connect_errno) {
+        printf("Database connection failed: %s\n", $mysqli->connect_error);
+        return FALSE;
+    }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $newName = $_POST['name'];
+        $newEmail = $_POST['email'];
+
+    // Validate 'name' field
+     if (empty($newName)) {
+        echo "Name field cannot be empty.";
+        exit;
+    }
 
     // Update user profile in the database
-    $stmt = $mysqli->prepare("UPDATE users SET name = ?, email = ? where username=?");
-    $stmt->bind_param("sss", $newName, $newEmail, $username);
+    $stmt = $mysqli->prepare("UPDATE users SET name = ?, email = ? WHERE username = ?");
+    $stmt->bind_param("sss", $newName, $newEmail, $_SESSION['username']);
     $stmt->execute();
     $stmt->close();
 
     // Redirect to profile page
     header("Location: profile.php");
-    exit;
+    } else {
+        return FALSE;
+    }
 }
 ?>
 
@@ -56,12 +89,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         form {
             max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 10px auto;
+            padding: 80px;
             background-color: #fff;
             border-radius: 10px;
+            box-sizing: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            display: run-in;
         }
 
         h1 {
@@ -101,6 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
         </div>
         <button type="submit">Update</button>
+       <p>Click here to go <a href="new_login.php">Back to profile</a></p>
     </form>
 </body>
 </html>
